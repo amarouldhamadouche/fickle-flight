@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from "react"
-import { StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Home from './screens/Home';
 import Profile from './screens/Profile'
@@ -13,31 +12,33 @@ import 'react-native-gesture-handler';
 import { DefaultTheme,Provider } from 'react-native-paper';
 import Booking from './screens/Booking';
 import Search from './screens/Search';
-import {loadAsync} from "expo-font";
-import * as SplashScreen from 'expo-splash-screen';
+import * as Font from "expo-font";
 
 const Tab = createMaterialBottomTabNavigator()
-
 function Index() {
-
   const [fontsLoaded, setFontLoaded] = useState(false)
-  const fontsLoad = async ()=>{
-    await loadAsync({
+  
+  const fetchFonts = async ()=>{
+    await Font.loadAsync({
       'Baloo-Bhai-2': require('./assets/fonts/BalooBhai2-Bold.ttf'),
       'Inter-700': require('./assets/fonts/SourceSansPro-Bold.ttf'),
       'Inter-600': require('./assets/fonts/SourceSansPro-SemiBold.ttf'),
       'Inter-400': require('./assets/fonts/SourceSansPro-Regular.ttf'),
-      'Inter-500': require('./assets/fonts/Roboto-Medium.ttf')
+      'Robot-500': require('./assets/fonts/Roboto-Medium.ttf')
     });
-    setFontLoaded(true)
   } 
 
+  const loadFont = async()=>{
+    await fetchFonts()
+    setFontLoaded(true)
+  }
+
   useEffect(()=>{
-    fontsLoad()
+     loadFont()
   },[])
   
   return (
-    fontsLoaded ? (
+    fontsLoaded && 
       <NavigationContainer style={styles.container}>
         <StatusBar hidden={false} />
         <Tab.Navigator labeled={true} barStyle={{ backgroundColor: 'white', paddingBottom: 0}} activebackgroundColor="white" inactiveColor="#7E8B97" activeColor="#1A6EB4">
@@ -70,11 +71,7 @@ function Index() {
           }}/>
         </Tab.Navigator> 
       </NavigationContainer>
-    ) : (
-      <Booking/>
     )
-   
-  );
 }
 
 const styles = StyleSheet.create({
@@ -90,7 +87,7 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    secondaryContainer: 'transparent', // Use transparent to disable the little highlighting oval
+    secondaryContainer: 'transparent',
   },
 };
 
